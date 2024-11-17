@@ -56,6 +56,8 @@ const spiderStocks = async () => {
                         code: row.children[1].firstElementChild.innerHTML,
                         name: row.children[2].firstElementChild.innerHTML,
                         price: row.children[3].innerHTML,
+                        rise: row.children[4].innerHTML,
+                        change: row.children[5].innerHTML,
                         exchange: row.children[10].innerHTML,
                         amount: row.children[12].innerHTML,
                     });
