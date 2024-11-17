@@ -52,7 +52,10 @@ const spiderStocks = async () => {
             for (let row of tbody.rows) {
                 innerStocks.push({
                     code: row.children[1].firstElementChild.innerHTML,
-                    name: row.children[2].firstElementChild.innerHTML
+                    name: row.children[2].firstElementChild.innerHTML,
+                    price: row.children[3].innerHTML,
+                    exchange: row.children[10].innerHTML,
+                    amount: row.children[12].innerHTML,
                 });
             }
             console.log(innerStocks);
@@ -69,8 +72,8 @@ const spiderStocks = async () => {
     console.log(`爬取成功 count:[${stocks.length}]`);
 
     const csv = Papa.unparse(stocks);
-    fs.writeFileSync('stocks.csv', csv);
-    console.log(csv)
+    fs.writeFileSync('my-stocks.csv', csv);
+    console.log(`写入文件->${stocks.length}`)
 }
 
 
