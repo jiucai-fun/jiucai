@@ -43,31 +43,37 @@ const spiderStocks = async () => {
     const page = await browser.newPage();
 
     const stocks = [];
-    for (let i = 1; i < 888; i++) {
-        const url = `https://q.10jqka.com.cn/index/index/board/all/field/dm/order/desc/page/${i}/ajax/1/`;
-        await page.goto(url, {waitUntil: 'networkidle0'});
-        const outStocks = await page.evaluate(it => {
-            const tbody = document.getElementsByTagName("tbody")[0];
-            let innerStocks = [];
-            for (let row of tbody.rows) {
-                innerStocks.push({
-                    code: row.children[1].firstElementChild.innerHTML,
-                    name: row.children[2].firstElementChild.innerHTML,
-                    price: row.children[3].innerHTML,
-                    exchange: row.children[10].innerHTML,
-                    amount: row.children[12].innerHTML,
-                });
+    let i = 1;
+    while (i < 888) {
+        try {
+            const url = `https://q.10jqka.com.cn/index/index/board/all/field/dm/order/desc/page/${i}/ajax/1/`;
+            await page.goto(url, {waitUntil: 'networkidle0'});
+            const outStocks = await page.evaluate(it => {
+                const tbody = document.getElementsByTagName("tbody")[0];
+                let innerStocks = [];
+                for (let row of tbody.rows) {
+                    innerStocks.push({
+                        code: row.children[1].firstElementChild.innerHTML,
+                        name: row.children[2].firstElementChild.innerHTML,
+                        price: row.children[3].innerHTML,
+                        exchange: row.children[10].innerHTML,
+                        amount: row.children[12].innerHTML,
+                    });
+                }
+                console.log(innerStocks);
+                return innerStocks;
+            });
+            // 已经爬完
+            if (outStocks.length === 0) {
+                break
             }
-            console.log(innerStocks);
-            return innerStocks;
-        });
-        // 已经爬完
-        if (outStocks.length === 0) {
-            break
+            outStocks.forEach(it => stocks.push(it));
+            console.log(`进度->${stocks.length}`);
+            i++;
+            await delay(3000);
+        } catch (e) {
+            console.error(e);
         }
-        outStocks.forEach(it => stocks.push(it));
-        console.log(`进度->${stocks.length}`);
-        await delay(3000);
     }
     console.log(`爬取成功 count:[${stocks.length}]`);
 
@@ -82,7 +88,6 @@ const spiderStocks = async () => {
     fs.writeFileSync(`../stocks/${dateString}.csv`, csv);
     console.log(`写入文件->${stocks.length}`)
 }
-
 
 
 try {
