@@ -71,8 +71,15 @@ const spiderStocks = async () => {
     }
     console.log(`爬取成功 count:[${stocks.length}]`);
 
+    // 年月日
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    const dateString = year + '-' + month + '-' + day;
+
     const csv = Papa.unparse(stocks);
-    fs.writeFileSync('my-stocks.csv', csv);
+    fs.writeFileSync(`../stocks/${dateString}.csv`, csv);
     console.log(`写入文件->${stocks.length}`)
 }
 
