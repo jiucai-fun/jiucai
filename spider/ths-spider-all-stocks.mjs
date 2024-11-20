@@ -40,6 +40,8 @@ const loginThs = async () => {
 }
 
 const spiderStocks = async () => {
+    // 记录函数开始时间
+    let startTime = performance.now();
     const page = await browser.newPage();
 
     const stocks = [];
@@ -89,6 +91,12 @@ const spiderStocks = async () => {
     const csv = Papa.unparse(stocks);
     fs.writeFileSync(`../stocks/${dateString}.csv`, csv);
     console.log(`写入文件->${stocks.length}`)
+
+    // 记录函数结束时间
+    let endTime = performance.now();
+    // 计算函数运行时间
+    let runTime = endTime - startTime;
+    console.log(`Function execution time: ${runTime} milliseconds`);
 }
 
 
