@@ -74,7 +74,7 @@ const spiderStocks = async () => {
             outStocks.forEach(it => stocks.push(it));
             console.log(`进度->${stocks.length}`);
             i++;
-            await delay(3000);
+            await delay(2000);
         } catch (e) {
             console.error(e);
         }
