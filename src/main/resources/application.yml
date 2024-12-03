@@ -1,0 +1,33 @@
+logging:
+  pattern:
+    file: '%d{yyyy-MM-dd HH:mm:ss} [%5level] [%thread] %-28logger{20} : %msg%n'
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%5level] [%thread] %-28logger{20} : %msg%n'
+  file:
+    name: ./log/simulator.log
+
+# 根路径配置
+server:
+  address: 0.0.0.0
+  port: 17333
+  servlet:
+    context-path: /
+
+simulator:
+  port: 17313
+  nodePath: ./bin/nodejs/node.exe
+  chromePath: ./bin/chrome/chrome.exe
+  workingPath: .
+  headless: false
+  simulators:
+#    - alibaba
+#    - baidu
+#    - tencent
+#    - openai
+#    - google
+
+
+net:
+  id: netConfig
+  protocol-location: protocol.xml
+  code-languages: 0
+  fold-protocol: true
