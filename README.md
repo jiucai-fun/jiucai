@@ -1,6 +1,6 @@
 # jiucai-fun
 
-保护韭菜，从我做起
+保护韭菜，从我做起，[快乐韭菜主页 https://jiucai.fun](https://jiucai.fun)
 
 # 安装方法
 
