@@ -12,6 +12,9 @@ import org.junit.Test;
 
 import java.util.*;
 
+/**
+ * 统计历次开奖记录，增加买中彩票的概率
+ */
 @Ignore
 public class ShuangSeQiu {
 
@@ -179,6 +182,9 @@ public class ShuangSeQiu {
             var blue = selectBlue.get(select).number;
             var ssqSimpleData = new SsqSimpleData(List.of(red1, red2, red3, red4, red5, red6), blue);
             myChoices.add(ssqSimpleData);
+            if (ssqSimpleDataList.contains(ssqSimpleData)) {
+                throw new Exception("重复号码");
+            }
         }
 
         System.out.println(JsonUtils.object2StringPrettyPrinter(myChoices));
