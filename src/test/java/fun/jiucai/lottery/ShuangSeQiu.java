@@ -79,7 +79,7 @@ public class ShuangSeQiu {
 
 
     @Test
-    public void selectTest() throws Exception {
+    public void select() throws Exception {
         // 爬取历史所有开奖记录
         var url = "https://www.cwl.gov.cn/cwl_admin/front/cwlkj/search/kjxx/findDrawNotice?name=ssq&issueCount=&issueStart=&issueEnd=&dayStart=&dayEnd=&pageNo=1&pageSize=10000&week=&systemType=PC";
 
