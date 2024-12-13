@@ -34,7 +34,7 @@ const loginThs = async () => {
             console.warn("同花顺账号已登录！！！！！！！");
             return;
         }
-        console.warn("请登录同花顺账号");
+        console.error("请登录同花顺账号");
         await delay(5 * 1000)
     }
 }
