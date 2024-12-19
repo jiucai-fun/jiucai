@@ -77,6 +77,7 @@ const spiderStocks = async () => {
             await delay(1000);
         } catch (e) {
             console.error(e);
+            await delay(5000);
         }
     }
     console.log(`爬取成功 count:[${stocks.length}]`);
