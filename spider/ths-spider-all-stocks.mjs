@@ -80,7 +80,7 @@ const spiderStocks = async () => {
             await delay(5000);
         }
     }
-    console.log(`爬取成功 count:[${stocks.length}]`);
+    console.log(`股票爬取成功 count:[${stocks.length}]`);
 
     // 年月日
     const currentDate = new Date();
@@ -91,7 +91,63 @@ const spiderStocks = async () => {
 
     const csv = Papa.unparse(stocks);
     fs.writeFileSync(`../stocks/${dateString}.csv`, csv);
-    console.log(`写入文件->${stocks.length}`)
+    console.log(`写入文件股票->${stocks.length}`)
+
+    // 记录函数结束时间
+    let endTime = performance.now();
+    // 计算函数运行时间
+    let runTime = endTime - startTime;
+    console.log(`Function execution time: ${runTime} milliseconds`);
+}
+
+const spiderIndexes = async () => {
+    // 记录函数开始时间
+    let startTime = performance.now();
+    const page = await browser.newPage();
+
+    const stocks = [];
+    let i = 1;
+    while (i < 100) {
+        try {
+            const url = `https://q.10jqka.com.cn/zs/index/field/indexcode/order/asc/page/${i}/ajax/1/`;
+            await page.goto(url, {waitUntil: 'networkidle0'});
+            const outStocks = await page.evaluate(it => {
+                const tbody = document.getElementsByTagName("tbody")[0];
+                let innerStocks = [];
+                for (let row of tbody.rows) {
+                    innerStocks.push({
+                        code: row.children[1].firstElementChild.innerHTML,
+                        name: row.children[2].firstElementChild.innerHTML,
+                        index: row.children[3].innerHTML,
+                    });
+                }
+                console.log(innerStocks);
+                return innerStocks;
+            });
+            // 已经爬完
+            if (outStocks.length === 0) {
+                break
+            }
+            outStocks.forEach(it => stocks.push(it));
+            i++;
+            await delay(1000);
+        } catch (e) {
+            console.error(e);
+            await delay(5000);
+        }
+    }
+    console.log(`指数爬取成功 count:[${stocks.length}]`);
+
+    // 年月日
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    const dateString = year + '-' + month + '-' + day;
+
+    const csv = Papa.unparse(stocks);
+    fs.writeFileSync(`../stocks/index/${dateString}.csv`, csv);
+    console.log(`写入文件指数->${stocks.length}`)
 
     // 记录函数结束时间
     let endTime = performance.now();
@@ -104,6 +160,9 @@ const spiderStocks = async () => {
 try {
     await loginThs();
     await spiderStocks();
+    console.log("-----------------------------------------------------------------------------------------------------");
+    await spiderIndexes();
+    console.log("-----------------------------------------------------------------------------------------------------");
 } catch (error) {
     console.log('zfoo_error', error);
 } finally {
