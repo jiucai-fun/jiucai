@@ -132,6 +132,7 @@ const spiderOptions = async (optionIndex, date) => {
                 }
             ]
         });
+        console.log(urlIF);
         console.log(resultIF);
 
         const urlIC = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IC${optionIndex}/maxDate/${date}/`;
@@ -165,6 +166,7 @@ const spiderOptions = async (optionIndex, date) => {
                 }
             ]
         });
+        console.log(urlIC);
         console.log(resultIC);
 
         const urlIH = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IH${optionIndex}/maxDate/${date}/`;
@@ -198,6 +200,7 @@ const spiderOptions = async (optionIndex, date) => {
                 }
             ]
         });
+        console.log(urlIH);
         console.log(resultIH);
 
         await page.close();
