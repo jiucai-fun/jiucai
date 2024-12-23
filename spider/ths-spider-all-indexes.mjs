@@ -69,6 +69,7 @@ const spiderIndexes = async (optionIndex, date) => {
                 break
             }
             outStocks.forEach(it => stocks.push(it));
+            console.log(`进度->${stocks.length}`);
             i++;
             await delay(1000);
         } catch (e) {
@@ -86,7 +87,7 @@ const spiderIndexes = async (optionIndex, date) => {
     const dateString = year + '-' + month + '-' + day;
 
     const csv = Papa.unparse(stocks);
-    fs.writeFileSync(`../stocks/index/${dateString}.csv`, csv);
+    fs.writeFileSync(`../indexes/${dateString}.csv`, csv);
     console.log(`写入文件指数->${stocks.length}`)
 
     // 记录函数结束时间
