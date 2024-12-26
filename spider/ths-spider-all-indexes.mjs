@@ -97,120 +97,144 @@ const spiderIndexes = async (optionIndex, date) => {
     console.log(`Function execution time: ${runTime} milliseconds`);
 }
 
+function getCurrentDateTime() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // 月份从0开始，需要加1
+    const day = now.getDate().toString().padStart(2, '0');
+
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+
+    return `${year}年${month}月${day}日 ${hours}时${minutes}分${seconds}秒`;
+}
+
 const spiderOptions = async (optionIndex, date) => {
     const page = await browser.newPage();
 
-    try {
-        const urlIF = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IF${optionIndex}/maxDate/${date}/`;
-        await page.goto(urlIF, {waitUntil: 'networkidle0'});
-        const resultIF = await page.evaluate(it => {
-            const ifDivs = document.getElementsByClassName("gzqh-block");
+    while (true)
+    {
+        try {
+            const urlIF = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IF${optionIndex}/maxDate/${date}/`;
+            await page.goto(urlIF, {waitUntil: 'networkidle0'});
+            const resultIF = await page.evaluate(it => {
+                const ifDivs = document.getElementsByClassName("gzqh-block");
 
-            const ddDiv = ifDivs[4];
-            const ddName = ddDiv.querySelector(".hd").innerText;
-            console.log(ddName)
-            const ddRows = ddDiv.querySelector("tbody").rows;
-            const ddCount = ddRows[ddRows.length - 2].querySelector("span").innerText;
-            console.log(ddCount);
+                const ddDiv = ifDivs[4];
+                const ddName = ddDiv.querySelector(".hd").innerText;
+                console.log(ddName)
+                const ddRows = ddDiv.querySelector("tbody").rows;
+                const ddCount = ddRows[ddRows.length - 2].querySelector("span").innerText;
+                console.log(ddCount);
 
-            const kdDiv = ifDivs[5];
-            const kdName = kdDiv.querySelector(".hd").innerText;
-            console.log(kdName)
-            const kdRows = kdDiv.querySelector("tbody").rows;
-            const kdCount = kdRows[kdRows.length - 2].querySelector("span").innerText;
-            console.log(kdCount);
-            return [
-                {
-                    code: 777000,
-                    name: ddName,
-                    index: ddCount
-                },
-                {
-                    code: 777001,
-                    name: kdName,
-                    index: kdCount
-                }
-            ]
-        });
-        console.log(urlIF);
-        console.log(resultIF);
+                const kdDiv = ifDivs[5];
+                const kdName = kdDiv.querySelector(".hd").innerText;
+                console.log(kdName)
+                const kdRows = kdDiv.querySelector("tbody").rows;
+                const kdCount = kdRows[kdRows.length - 2].querySelector("span").innerText;
+                console.log(kdCount);
+                return [
+                    {
+                        code: 777000,
+                        name: ddName,
+                        index: ddCount
+                    },
+                    {
+                        code: 777001,
+                        name: kdName,
+                        index: kdCount
+                    }
+                ]
+            });
+            if (resultIF[0].index == "")
+            {
+                console.log(`${new Date()}-等待3分钟，重新爬取期权`);
+                await page.goto("https://www.bing.com", {waitUntil: 'networkidle0'});
+                await delay(3 * 60 * 1000);
+                continue;
+            }
+            console.log(urlIF);
+            console.log(resultIF);
 
-        const urlIC = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IC${optionIndex}/maxDate/${date}/`;
-        await page.goto(urlIC, {waitUntil: 'networkidle0'});
-        const resultIC = await page.evaluate(it => {
-            const ifDivs = document.getElementsByClassName("gzqh-block");
+            const urlIC = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IC${optionIndex}/maxDate/${date}/`;
+            await page.goto(urlIC, {waitUntil: 'networkidle0'});
+            const resultIC = await page.evaluate(it => {
+                const ifDivs = document.getElementsByClassName("gzqh-block");
 
-            const ddDiv = ifDivs[4];
-            const ddName = ddDiv.querySelector(".hd").innerText;
-            console.log(ddName)
-            const ddRows = ddDiv.querySelector("tbody").rows;
-            const ddCount = ddRows[ddRows.length - 2].querySelector("span").innerText;
-            console.log(ddCount);
+                const ddDiv = ifDivs[4];
+                const ddName = ddDiv.querySelector(".hd").innerText;
+                console.log(ddName)
+                const ddRows = ddDiv.querySelector("tbody").rows;
+                const ddCount = ddRows[ddRows.length - 2].querySelector("span").innerText;
+                console.log(ddCount);
 
-            const kdDiv = ifDivs[5];
-            const kdName = kdDiv.querySelector(".hd").innerText;
-            console.log(kdName)
-            const kdRows = kdDiv.querySelector("tbody").rows;
-            const kdCount = kdRows[kdRows.length - 2].querySelector("span").innerText;
-            console.log(kdCount);
-            return [
-                {
-                    code: 777010,
-                    name: ddName,
-                    index: ddCount
-                },
-                {
-                    code: 777011,
-                    name: kdName,
-                    index: kdCount
-                }
-            ]
-        });
-        console.log(urlIC);
-        console.log(resultIC);
+                const kdDiv = ifDivs[5];
+                const kdName = kdDiv.querySelector(".hd").innerText;
+                console.log(kdName)
+                const kdRows = kdDiv.querySelector("tbody").rows;
+                const kdCount = kdRows[kdRows.length - 2].querySelector("span").innerText;
+                console.log(kdCount);
+                return [
+                    {
+                        code: 777010,
+                        name: ddName,
+                        index: ddCount
+                    },
+                    {
+                        code: 777011,
+                        name: kdName,
+                        index: kdCount
+                    }
+                ]
+            });
+            console.log(urlIC);
+            console.log(resultIC);
 
-        const urlIH = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IH${optionIndex}/maxDate/${date}/`;
-        await page.goto(urlIH, {waitUntil: 'networkidle0'});
-        const resultIH = await page.evaluate(it => {
-            const ifDivs = document.getElementsByClassName("gzqh-block");
+            const urlIH = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IH${optionIndex}/maxDate/${date}/`;
+            await page.goto(urlIH, {waitUntil: 'networkidle0'});
+            const resultIH = await page.evaluate(it => {
+                const ifDivs = document.getElementsByClassName("gzqh-block");
 
-            const ddDiv = ifDivs[4];
-            const ddName = ddDiv.querySelector(".hd").innerText;
-            console.log(ddName)
-            const ddRows = ddDiv.querySelector("tbody").rows;
-            const ddCount = ddRows[ddRows.length - 2].querySelector("span").innerText;
-            console.log(ddCount);
+                const ddDiv = ifDivs[4];
+                const ddName = ddDiv.querySelector(".hd").innerText;
+                console.log(ddName)
+                const ddRows = ddDiv.querySelector("tbody").rows;
+                const ddCount = ddRows[ddRows.length - 2].querySelector("span").innerText;
+                console.log(ddCount);
 
-            const kdDiv = ifDivs[5];
-            const kdName = kdDiv.querySelector(".hd").innerText;
-            console.log(kdName)
-            const kdRows = kdDiv.querySelector("tbody").rows;
-            const kdCount = kdRows[kdRows.length - 2].querySelector("span").innerText;
-            console.log(kdCount);
-            return [
-                {
-                    code: 777020,
-                    name: ddName,
-                    index: ddCount
-                },
-                {
-                    code: 777021,
-                    name: kdName,
-                    index: kdCount
-                }
-            ]
-        });
-        console.log(urlIH);
-        console.log(resultIH);
+                const kdDiv = ifDivs[5];
+                const kdName = kdDiv.querySelector(".hd").innerText;
+                console.log(kdName)
+                const kdRows = kdDiv.querySelector("tbody").rows;
+                const kdCount = kdRows[kdRows.length - 2].querySelector("span").innerText;
+                console.log(kdCount);
+                return [
+                    {
+                        code: 777020,
+                        name: ddName,
+                        index: ddCount
+                    },
+                    {
+                        code: 777021,
+                        name: kdName,
+                        index: kdCount
+                    }
+                ]
+            });
+            console.log(urlIH);
+            console.log(resultIH);
 
-        await page.close();
+            await page.close();
 
-        let array = resultIF.concat(resultIC);
-        array = array.concat(resultIH);
+            let array = resultIF.concat(resultIC);
+            array = array.concat(resultIH);
 
-        return array;
-    } catch (e) {
-        console.error(e);
+            return array;
+        } catch (e) {
+            console.error(e);
+        }
     }
 }
 
