@@ -150,9 +150,9 @@ const spiderOptions = async (optionIndex, date) => {
             });
             if (resultIF[0].index == "")
             {
-                console.log(`${new Date()}-等待3分钟，重新爬取期权`);
+                console.log(`${new Date()}-等待10分钟，重新爬取期权`);
                 await page.goto("https://www.bing.com", {waitUntil: 'networkidle0'});
-                await delay(3 * 60 * 1000);
+                await delay(10 * 60 * 1000);
                 continue;
             }
             console.log(urlIF);
