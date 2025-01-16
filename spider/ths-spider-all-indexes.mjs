@@ -253,6 +253,7 @@ try {
     month = month.toString().padStart(2, '0');
     day = day.toString().padStart(2, '0');
     let formatTime = year + month + day;
+    // let formatTime = "20250115";
 
     await spiderIndexes("2501", formatTime);
 } catch (error) {
