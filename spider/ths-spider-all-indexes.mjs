@@ -255,7 +255,7 @@ try {
     let formatTime = year + month + day;
     // let formatTime = "20250115";
 
-    await spiderIndexes("2502", formatTime);
+    await spiderIndexes("2503", formatTime);
 } catch (error) {
     console.log('zfoo_error', error);
 } finally {
