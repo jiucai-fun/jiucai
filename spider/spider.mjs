@@ -1,10 +1,8 @@
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import puppeteer from 'puppeteer';
 
 const url = process.argv[2];
 
 
-puppeteer.use(StealthPlugin());
 // Launch the browser and open a new blank page
 const browser = await puppeteer.launch(
     {
