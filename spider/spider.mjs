@@ -8,7 +8,8 @@ puppeteer.use(StealthPlugin());
 // Launch the browser and open a new blank page
 const browser = await puppeteer.launch(
     {
-        headless: true
+        headless: true,
+        args: ['--no-sandbox', '--proxy-server=127.0.0.1:10809'] // ubuntu环境需要这个配置
     }
 );
 
