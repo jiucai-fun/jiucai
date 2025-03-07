@@ -155,8 +155,6 @@ const spiderOptions = async (optionIndex, date) => {
                 await delay(10 * 60 * 1000);
                 continue;
             }
-            console.log(urlIF);
-            console.log(resultIF);
 
             const urlIC = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IC${optionIndex}/maxDate/${date}/`;
             await page.goto(urlIC, {waitUntil: 'networkidle0'});
@@ -189,8 +187,6 @@ const spiderOptions = async (optionIndex, date) => {
                     }
                 ]
             });
-            console.log(urlIC);
-            console.log(resultIC);
 
             const urlIH = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IH${optionIndex}/maxDate/${date}/`;
             await page.goto(urlIH, {waitUntil: 'networkidle0'});
@@ -223,13 +219,21 @@ const spiderOptions = async (optionIndex, date) => {
                     }
                 ]
             });
-            console.log(urlIH);
-            console.log(resultIH);
+
+            for (const result of resultIH) {
+                console.log(`上证50-${result.name}: ${result.index}`);
+            }
+            for (const result of resultIF) {
+                console.log(`沪深300-${result.name}: ${result.index}`);
+            }
+            for (const result of resultIC) {
+                console.log(`中证500-${result.name}: ${result.index}`);
+            }
 
             await page.close();
 
-            let array = resultIF.concat(resultIC);
-            array = array.concat(resultIH);
+            let array = resultIH.concat(resultIF);
+            array = array.concat(resultIC);
 
             return array;
         } catch (e) {
