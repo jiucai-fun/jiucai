@@ -260,6 +260,7 @@ try {
     // let formatTime = "20250115";
 
     await spiderIndexes("2503", formatTime);
+    console.log("任务结束时间：" + new Date())
 } catch (error) {
     console.log('zfoo_error', error);
 } finally {
