@@ -27,6 +27,15 @@ const loginThs = async () => {
     const page = pages[0];
     await page.goto(loginUrl, {waitUntil: 'networkidle0'});
 
+    // 如果是周一记得提示重新登录，因为同花顺的cookie有效期1周
+    const date = new Date();
+    if (date.getDay() === 1) {
+        for (let i = 0; i < 18; i++) {
+            console.warn("同花顺的cookie有效期1周，周一记得重新登录同花顺账号");
+            await delay(1000);
+        }
+    }
+
     // 如果没有登录按钮则表示已经登录成功
     while (true) {
         const loginHideButton = await page.$('>>> [class="login-box hide"]');
@@ -39,7 +48,69 @@ const loginThs = async () => {
     }
 }
 
+const spiderStocks = async () => {
+    // 记录函数开始时间
+    let startTime = performance.now();
+    const page = await browser.newPage();
 
+    const stocks = [];
+    let i = 1;
+    while (i < 888) {
+        try {
+            const url = `https://q.10jqka.com.cn/index/index/board/all/field/dm/order/desc/page/${i}/ajax/1/`;
+            await page.goto(url, {waitUntil: 'networkidle0'});
+            const outStocks = await page.evaluate(it => {
+                const tbody = document.getElementsByTagName("tbody")[0];
+                let innerStocks = [];
+                for (let row of tbody.rows) {
+                    innerStocks.push({
+                        code: row.children[1].firstElementChild.innerHTML,
+                        name: row.children[2].firstElementChild.innerHTML,
+                        price: row.children[3].innerHTML,
+                        rise: row.children[4].innerHTML,
+                        change: row.children[5].innerHTML,
+                        exchange: row.children[10].innerHTML,
+                        amount: row.children[12].innerHTML,
+                    });
+                }
+                console.log(innerStocks);
+                return innerStocks;
+            });
+            // 已经爬完
+            if (outStocks.length === 0) {
+                break
+            }
+            outStocks.forEach(it => stocks.push(it));
+            console.log(`进度->${stocks.length}`);
+            i++;
+            await delay(1000);
+        } catch (e) {
+            console.error(e);
+            await delay(5000);
+        }
+    }
+    console.log(`股票爬取成功 count:[${stocks.length}]`);
+
+    // 年月日
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    const dateString = year + '-' + month + '-' + day;
+
+    const csv = Papa.unparse(stocks);
+    fs.writeFileSync(`../stocks/${dateString}.csv`, csv);
+    console.log(`写入文件股票->${stocks.length}`)
+
+    // 记录函数结束时间
+    let endTime = performance.now();
+    // 计算函数运行时间
+    let runTime = endTime - startTime;
+    console.log(`Function execution time: ${runTime} milliseconds`);
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 const spiderIndexes = async (optionIndex, date) => {
     // 记录函数开始时间
     let startTime = performance.now();
@@ -97,19 +168,6 @@ const spiderIndexes = async (optionIndex, date) => {
     console.log(`Function execution time: ${runTime} milliseconds`);
 }
 
-function getCurrentDateTime() {
-    const now = new Date();
-
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // 月份从0开始，需要加1
-    const day = now.getDate().toString().padStart(2, '0');
-
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-
-    return `${year}年${month}月${day}日 ${hours}时${minutes}分${seconds}秒`;
-}
 
 const spiderOptions = async (optionIndex, date) => {
     const page = await browser.newPage();
@@ -242,10 +300,17 @@ const spiderOptions = async (optionIndex, date) => {
     }
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
+
 
 try {
     await loginThs();
 
+    // 爬取股票
+    await spiderStocks();
+
+    // 爬取指数
     // --------------------------------------------------------------------------
     let today = new Date();
     let year = today.getFullYear();
@@ -258,9 +323,7 @@ try {
     day = day.toString().padStart(2, '0');
     let formatTime = year + month + day;
     // let formatTime = "20250115";
-
     await spiderIndexes("2506", formatTime);
-    console.log("任务结束时间：" + new Date())
 } catch (error) {
     console.log('zfoo_error', error);
 } finally {
