@@ -323,7 +323,7 @@ try {
     day = day.toString().padStart(2, '0');
     let formatTime = year + month + day;
     // let formatTime = "20250115";
-    await spiderIndexes("2506", formatTime);
+    await spiderIndexes("2507", formatTime);
 } catch (error) {
     console.log('zfoo_error', error);
 } finally {
