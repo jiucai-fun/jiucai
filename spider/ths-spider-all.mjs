@@ -175,7 +175,7 @@ const spiderOptions = async (optionIndex, date) => {
     while (true)
     {
         try {
-            const urlIF = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IF${optionIndex}/maxDate/${date}/`;
+            const urlIF = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IF${optionIndex}`;
             await page.goto(urlIF, {waitUntil: 'networkidle0'});
             const resultIF = await page.evaluate(it => {
                 const ifDivs = document.getElementsByClassName("gzqh-block");
@@ -214,7 +214,7 @@ const spiderOptions = async (optionIndex, date) => {
                 continue;
             }
 
-            const urlIC = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IC${optionIndex}/maxDate/${date}/`;
+            const urlIC = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IC${optionIndex}`;
             await page.goto(urlIC, {waitUntil: 'networkidle0'});
             const resultIC = await page.evaluate(it => {
                 const ifDivs = document.getElementsByClassName("gzqh-block");
@@ -246,7 +246,7 @@ const spiderOptions = async (optionIndex, date) => {
                 ]
             });
 
-            const urlIH = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IH${optionIndex}/maxDate/${date}/`;
+            const urlIH = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IH${optionIndex}`;
             await page.goto(urlIH, {waitUntil: 'networkidle0'});
             const resultIH = await page.evaluate(it => {
                 const ifDivs = document.getElementsByClassName("gzqh-block");
