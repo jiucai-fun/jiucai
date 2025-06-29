@@ -3,9 +3,9 @@ import {connect} from "puppeteer-real-browser";
 const url = process.argv[2];
 
 let {browser, page} = await connect({
-    headless: true,
+    headless: false,
 
-    args: ['--start-maximized'],
+    args: ['--start-maximized', '--no-sandbox', '--proxy-server=127.0.0.1:10809'],
 
     customConfig: {},
 
