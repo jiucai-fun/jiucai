@@ -1,5 +1,4 @@
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import {connect} from "puppeteer-real-browser";
 import Papa from 'papaparse';
 import fs from 'fs';
 
@@ -8,23 +7,33 @@ import {delay} from './websocket.mjs';
 
 const loginUrl = "https://q.10jqka.com.cn/";
 
-puppeteer.use(StealthPlugin());
-
 // Launch the browser and open a new blank page
-const browser = await puppeteer.launch(
-    {
-        headless: false,
-        userDataDir: './userData/mybrowser'
-    }
-);
 
+let {browser, page} = await connect({
+    headless: false,
+    userDataDir: './userData/mybrowser',
+    args: ['--start-maximized'],
+    customConfig: {},
+
+    turnstile: true,
+
+    connectOption: {
+        defaultViewport: null,
+    },
+
+    disableXvfb: false,
+    ignoreAllFlags: false,
+    // proxy:{
+    //     host:'<proxy-host>',
+    //     port:'<proxy-port>',
+    //     username:'<proxy-username>',
+    //     password:'<proxy-password>'
+    // }
+});
 const context = browser.defaultBrowserContext();
 await context.overridePermissions(loginUrl, ['clipboard-read', 'clipboard-write', 'clipboard-sanitized-write']);
-
 // 登录同花顺
 const loginThs = async () => {
-    const pages = await browser.pages();
-    const page = pages[0];
     await page.goto(loginUrl, {waitUntil: 'networkidle0'});
 
     // 如果是周一记得提示重新登录，因为同花顺的cookie有效期1周
