@@ -11,9 +11,11 @@ const loginUrl = "https://q.10jqka.com.cn/";
 
 let {browser, page} = await connect({
     headless: false,
-    userDataDir: './userData/mybrowser',
-    args: ['--start-maximized'],
-    customConfig: {},
+    args: ['--start-maximized', '--no-sandbox'],
+    customConfig: {
+        chromePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+        userDataDir: "C:\\Users\\sunquanxiao\\AppData\\Local\\Google\\Chrome\\User Data"
+    },
 
     turnstile: true,
 
