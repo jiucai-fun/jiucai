@@ -14,7 +14,9 @@ let {browser, page} = await connect({
     args: ['--start-maximized', '--no-sandbox'],
     customConfig: {
         chromePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-        userDataDir: "C:\\Users\\sunquanxiao\\AppData\\Local\\Google\\Chrome\\User Data"
+        userDataDir: "C:\\Users\\sunquanxiao\\AppData\\Local\\Google\\Chrome\\User Data",
+        logLevel: 'verbose',
+        startingUrl: loginUrl
     },
 
     turnstile: true,
