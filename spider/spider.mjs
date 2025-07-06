@@ -5,13 +5,15 @@ const url = process.argv[2];
 let {browser, page} = await connect({
     headless: true,
 
-    args: ['--start-maximized'],
+    args: ['--start-maximized', '--no-sandbox'],
 
     customConfig: {},
 
     turnstile: true,
 
-    connectOption: {},
+    connectOption: {
+        defaultViewport: null,
+    },
 
     disableXvfb: false,
     ignoreAllFlags: false,
@@ -25,10 +27,6 @@ let {browser, page} = await connect({
 
 const context = browser.defaultBrowserContext();
 await context.overridePermissions(url, ['clipboard-read', 'clipboard-write', 'clipboard-sanitized-write']);
-await page.setViewport({
-    width: 1920,
-    height: 1080
-});
 
 try {
     await page.goto(url, {waitUntil: 'networkidle0'});
