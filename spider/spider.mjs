@@ -35,7 +35,20 @@ try {
 }
 
 try {
-    const html = await page.content(); // serialized HTML of page DOM.
+    let html = await page.content(); // serialized HTML of page DOM.
+
+    // 遍历所有 iframe，提取它们的内容
+    if (process.argv[3]) {
+        if (page.frames()) {
+            for (let iframe of page.frames()) {
+                const frameContent = await iframe.content();
+                if (frameContent) {
+                    html += frameContent;
+                }
+            }
+        }
+    }
+
     console.log(html);
 } catch (error) {
     console.log('zfoo_error', error);
