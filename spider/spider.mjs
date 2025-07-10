@@ -1,9 +1,15 @@
 import {connect} from "puppeteer-real-browser";
+import {KnownDevices} from 'puppeteer';
+const iPhone = KnownDevices['iPhone 15 Pro'];
+
+
 
 const url = process.argv[2];
+const mobile = process.argv[3];
+const frame = process.argv[4];
 
 let {browser, page} = await connect({
-    headless: true,
+    headless: false,
 
     args: ['--start-maximized', '--no-sandbox'],
 
@@ -28,6 +34,10 @@ let {browser, page} = await connect({
 const context = browser.defaultBrowserContext();
 await context.overridePermissions(url, ['clipboard-read', 'clipboard-write', 'clipboard-sanitized-write']);
 
+if (mobile) {
+    await page.emulate(iPhone);
+}
+
 try {
     await page.goto(url, {waitUntil: 'networkidle0'});
 } catch (error) {
@@ -38,7 +48,7 @@ try {
     let html = await page.content(); // serialized HTML of page DOM.
 
     // 遍历所有 iframe，提取它们的内容
-    if (process.argv[3]) {
+    if (frame) {
         if (page.frames()) {
             for (let iframe of page.frames()) {
                 const frameContent = await iframe.content();
