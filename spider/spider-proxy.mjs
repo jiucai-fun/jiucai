@@ -1,7 +1,10 @@
 import {connect} from "puppeteer-real-browser";
+import {KnownDevices} from "puppeteer";
 
 const url = process.argv[2];
+const mobile = process.argv[3];
 
+const iPhone = KnownDevices['iPhone 15 Pro'];
 let {browser, page} = await connect({
     headless: false,
 
@@ -24,6 +27,10 @@ let {browser, page} = await connect({
     //     password:'<proxy-password>'
     // }
 });
+
+if (mobile) {
+    await page.emulate(iPhone);
+}
 
 const context = browser.defaultBrowserContext();
 await context.overridePermissions(url, ['clipboard-read', 'clipboard-write', 'clipboard-sanitized-write']);
