@@ -31,12 +31,12 @@ let {browser, page} = await connect({
     // }
 });
 
-const context = browser.defaultBrowserContext();
-await context.overridePermissions(url, ['clipboard-read', 'clipboard-write', 'clipboard-sanitized-write']);
-
 if (mobile) {
     await page.emulate(iPhone);
 }
+
+const context = browser.defaultBrowserContext();
+await context.overridePermissions(url, ['clipboard-read', 'clipboard-write', 'clipboard-sanitized-write']);
 
 try {
     await page.goto(url, {waitUntil: 'networkidle0'});
