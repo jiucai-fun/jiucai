@@ -1,5 +1,6 @@
 package fun.jiucai.stock;
 
+import com.zfoo.monitor.util.OSUtils;
 import com.zfoo.net.NetContext;
 import com.zfoo.net.core.HostAndPort;
 import com.zfoo.net.core.websocket.WebsocketSslClient;
@@ -42,6 +43,11 @@ public class MarketTest {
 
     @Test
     public void saveMarket() throws Exception {
+        var result = OSUtils.execCommand("node ths-spider-all.mjs", "./spider");
+        System.out.println(result);
+        System.out.println("------------------------------------------------------------------------------------------");
+        ThreadUtils.sleep(3000);
+
         var context = new ClassPathXmlApplicationContext("application-test.xml");
         var webSocketClientProtocolConfig = WebSocketClientProtocolConfig.newBuilder().webSocketUri("wss://ws.jiucai.fun/").build();
         var client = new WebsocketSslClient(HostAndPort.valueOf("ws.jiucai.fun:443"), webSocketClientProtocolConfig);
