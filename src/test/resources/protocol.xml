@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+
+<!-- native为内部消息，common是公共消息每个模块都能使用 -->
+<protocols>
+    <module id="1" name="native">
+        <protocol location="com.zfoo.net.core.broker"/>
+        <protocol location="com.zfoo.net.packet.common"/>
+        <protocol location="com.zfoo.net.router.attachment"/>
+    </module>
+
+    <module id="2" name="common">
+        <protocol id="1300" location="fun.jiucai.stock.protocol.Market"/>
+        <protocol id="1301" location="fun.jiucai.stock.protocol.SaveMarketAsk"/>
+        <protocol id="1302" location="fun.jiucai.stock.protocol.SaveMarketAnswer"/>
+    </module>
+
+</protocols>
