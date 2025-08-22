@@ -124,12 +124,12 @@ const spiderStocks = async () => {
 
 // ---------------------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------------
-const spiderIndexes = async (optionIndex, date) => {
+const spiderIndexes = async () => {
     // 记录函数开始时间
     let startTime = performance.now();
     const page = await browser.newPage();
 
-    const stocks = await spiderOptions(optionIndex, date);
+    const stocks = await spiderOptions();
     let i = 1;
     while (i < 100) {
         try {
@@ -188,7 +188,7 @@ const spiderOptions = async (optionIndex, date) => {
     while (true)
     {
         try {
-            const urlIF = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IF${optionIndex}`;
+            const urlIF = `https://data.10jqka.com.cn/gzqh`;
             await page.goto(urlIF, {waitUntil: 'networkidle0'});
             const resultIF = await page.evaluate(it => {
                 const ifDivs = document.getElementsByClassName("gzqh-block");
@@ -226,87 +226,12 @@ const spiderOptions = async (optionIndex, date) => {
                 await delay(10 * 60 * 1000);
                 continue;
             }
-
-            const urlIC = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IC${optionIndex}`;
-            await page.goto(urlIC, {waitUntil: 'networkidle0'});
-            const resultIC = await page.evaluate(it => {
-                const ifDivs = document.getElementsByClassName("gzqh-block");
-
-                const ddDiv = ifDivs[4];
-                const ddName = ddDiv.querySelector(".hd").innerText;
-                console.log(ddName)
-                const ddRows = ddDiv.querySelector("tbody").rows;
-                const ddCount = ddRows[ddRows.length - 2].querySelector("span").innerText;
-                console.log(ddCount);
-
-                const kdDiv = ifDivs[5];
-                const kdName = kdDiv.querySelector(".hd").innerText;
-                console.log(kdName)
-                const kdRows = kdDiv.querySelector("tbody").rows;
-                const kdCount = kdRows[kdRows.length - 2].querySelector("span").innerText;
-                console.log(kdCount);
-                return [
-                    {
-                        code: 777010,
-                        name: ddName,
-                        index: ddCount
-                    },
-                    {
-                        code: 777011,
-                        name: kdName,
-                        index: kdCount
-                    }
-                ]
-            });
-
-            const urlIH = `https://data.10jqka.com.cn/gzqh/index/instrumentId/IH${optionIndex}`;
-            await page.goto(urlIH, {waitUntil: 'networkidle0'});
-            const resultIH = await page.evaluate(it => {
-                const ifDivs = document.getElementsByClassName("gzqh-block");
-
-                const ddDiv = ifDivs[4];
-                const ddName = ddDiv.querySelector(".hd").innerText;
-                console.log(ddName)
-                const ddRows = ddDiv.querySelector("tbody").rows;
-                const ddCount = ddRows[ddRows.length - 2].querySelector("span").innerText;
-                console.log(ddCount);
-
-                const kdDiv = ifDivs[5];
-                const kdName = kdDiv.querySelector(".hd").innerText;
-                console.log(kdName)
-                const kdRows = kdDiv.querySelector("tbody").rows;
-                const kdCount = kdRows[kdRows.length - 2].querySelector("span").innerText;
-                console.log(kdCount);
-                return [
-                    {
-                        code: 777020,
-                        name: ddName,
-                        index: ddCount
-                    },
-                    {
-                        code: 777021,
-                        name: kdName,
-                        index: kdCount
-                    }
-                ]
-            });
-
-            for (const result of resultIH) {
-                console.log(`上证50-${result.name}: ${result.index}`);
-            }
             for (const result of resultIF) {
                 console.log(`沪深300-${result.name}: ${result.index}`);
             }
-            for (const result of resultIC) {
-                console.log(`中证500-${result.name}: ${result.index}`);
-            }
 
             await page.close();
-
-            let array = resultIH.concat(resultIF);
-            array = array.concat(resultIC);
-
-            return array;
+            return resultIF;
         } catch (e) {
             console.error(e);
         }
@@ -324,19 +249,7 @@ try {
     await spiderStocks();
 
     // 爬取指数
-    // --------------------------------------------------------------------------
-    let today = new Date();
-    let year = today.getFullYear();
-    let day = today.getDate();
-    let month = today.getMonth() + 1;
-
-    // +1是因为getMonth()函数返回的月份是从0开始的，所以需要加1
-    // '0'这里是确保如果某位数小于10时，他前面会自动补0， 如：假设日期是10号，new String(-).padStart(2, '0')后变为"010"，完成空位的补全
-    month = month.toString().padStart(2, '0');
-    day = day.toString().padStart(2, '0');
-    let formatTime = year + month + day;
-    // let formatTime = "20250115";
-    await spiderIndexes("2509", formatTime);
+    await spiderIndexes();
 } catch (error) {
     console.log('zfoo_error', error);
 } finally {
