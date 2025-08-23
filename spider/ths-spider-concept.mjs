@@ -4,7 +4,7 @@ import {delay} from './websocket.mjs';
 import config from "./config.json" with { type: 'json' };
 
 
-const concept = process.argv[2];
+const concept = "308428";
 
 let {browser, page} = await connect({
     headless: false,
@@ -40,6 +40,9 @@ const spiderConcepts = async () => {
             const outStocks = await page.evaluate(it => {
                 const tbody = document.getElementsByTagName("tbody")[0];
                 let innerStocks = [];
+                if (tbody.innerText.includes("暂无成份股数据")) {
+                    return innerStocks;
+                }
                 for (let row of tbody.rows) {
                     innerStocks.push(row.children[1].firstElementChild.innerHTML);
                 }
@@ -71,5 +74,3 @@ try {
     pages.forEach(it => it.close());
     await browser.close();
 }
-
-process.exit(1);
