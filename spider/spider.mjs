@@ -16,8 +16,7 @@ let {browser, page} = await connect({
 
     customConfig: {
         userDataDir: config.userDataDir,
-        logLevel: 'verbose',
-        startingUrl: "https://www.baidu.com"
+        logLevel: 'verbose'
     },
 
     turnstile: true,
