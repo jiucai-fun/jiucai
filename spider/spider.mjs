@@ -13,7 +13,11 @@ let {browser, page} = await connect({
 
     args: ['--start-maximized', '--no-sandbox'],
 
-    customConfig: {},
+    customConfig: {
+        userDataDir: "C:\\github\\jiucai\\spider\\.cache\\userData",
+        logLevel: 'verbose',
+        startingUrl: "https://www.baidu.com"
+    },
 
     turnstile: true,
 
@@ -36,7 +40,7 @@ if (mobile) {
 }
 
 const context = browser.defaultBrowserContext();
-await context.overridePermissions(url, ['clipboard-read', 'clipboard-write', 'clipboard-sanitized-write']);
+// await context.overridePermissions(url, ['clipboard-read', 'clipboard-write', 'clipboard-sanitized-write']);
 
 try {
     await page.goto(url, {waitUntil: 'networkidle0'});

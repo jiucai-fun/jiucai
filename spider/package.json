@@ -2,9 +2,9 @@
     "name": "jiucai-fun",
     "version": "0.1.1",
     "dependencies": {
-        "puppeteer": "24.11.2",
-        "puppeteer-core": "24.11.2",
-        "puppeteer-real-browser": "^1.4.2",
+        "puppeteer": "^24.17.0",
+        "puppeteer-core": "^24.17.0",
+        "puppeteer-real-browser": "^1.4.3",
         "axios": "^1.6.8",
         "clipboardy": "^4.0.0",
         "turndown": "^7.1.3",
