@@ -2,8 +2,8 @@ import {connect} from "puppeteer-real-browser";
 import Papa from 'papaparse';
 import fs from 'fs';
 import { loginThs } from './ths-utils.mjs';
-
 import {delay} from './websocket.mjs';
+import config from "./config.json" with { type: 'json' };
 
 const loginUrl = "https://q.10jqka.com.cn/";
 
@@ -13,8 +13,7 @@ let {browser, page} = await connect({
     headless: false,
     args: ['--start-maximized', '--no-sandbox'],
     customConfig: {
-        // chromePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-        // userDataDir: "C:\\Users\\sunquanxiao\\AppData\\Local\\Google\\Chrome\\User Data",
+        userDataDir: config.userDataDir,
         logLevel: 'verbose',
         startingUrl: loginUrl
     },
