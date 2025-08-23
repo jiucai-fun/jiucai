@@ -5,7 +5,6 @@ import { loginThs } from './ths-utils.mjs';
 import {delay} from './websocket.mjs';
 import config from "./config.json" with { type: 'json' };
 
-const loginUrl = "https://q.10jqka.com.cn/";
 
 // Launch the browser and open a new blank page
 
@@ -14,8 +13,7 @@ let {browser, page} = await connect({
     args: ['--start-maximized', '--no-sandbox'],
     customConfig: {
         userDataDir: config.userDataDir,
-        logLevel: 'verbose',
-        startingUrl: loginUrl
+        logLevel: 'verbose'
     },
 
     turnstile: true,
@@ -26,15 +24,7 @@ let {browser, page} = await connect({
 
     disableXvfb: false,
     ignoreAllFlags: false,
-    // proxy:{
-    //     host:'<proxy-host>',
-    //     port:'<proxy-port>',
-    //     username:'<proxy-username>',
-    //     password:'<proxy-password>'
-    // }
 });
-const context = browser.defaultBrowserContext();
-await context.overridePermissions(loginUrl, ['clipboard-read', 'clipboard-write', 'clipboard-sanitized-write']);
 
 const spiderStocks = async () => {
     // 记录函数开始时间
