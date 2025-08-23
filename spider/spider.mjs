@@ -1,5 +1,6 @@
 import {connect} from "puppeteer-real-browser";
 import {KnownDevices} from 'puppeteer';
+import config from "./config.json" with { type: 'json' };
 const iPhone = KnownDevices['iPhone 15 Pro'];
 
 
@@ -14,7 +15,7 @@ let {browser, page} = await connect({
     args: ['--start-maximized', '--no-sandbox'],
 
     customConfig: {
-        userDataDir: `${process.cwd()}/.cache/userData`,
+        userDataDir: config.userDataDir,
         logLevel: 'verbose',
         startingUrl: "https://www.baidu.com"
     },
