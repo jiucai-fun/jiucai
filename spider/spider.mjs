@@ -14,7 +14,7 @@ let {browser, page} = await connect({
     args: ['--start-maximized', '--no-sandbox'],
 
     customConfig: {
-        userDataDir: "C:\\github\\jiucai\\spider\\.cache\\userData",
+        userDataDir: `${process.cwd()}/.cache/userData`,
         logLevel: 'verbose',
         startingUrl: "https://www.baidu.com"
     },
