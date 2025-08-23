@@ -15,8 +15,7 @@ let {browser, page} = await connect({
     args: ['--start-maximized', '--no-sandbox'],
 
     customConfig: {
-        userDataDir: config.userDataDir,
-        logLevel: 'verbose'
+        userDataDir: config.userDataDir
     },
 
     turnstile: true,

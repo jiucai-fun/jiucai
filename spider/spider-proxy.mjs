@@ -1,5 +1,6 @@
 import {connect} from "puppeteer-real-browser";
 import {KnownDevices} from "puppeteer";
+import config from "./config.json" with { type: 'json' };
 
 const url = process.argv[2];
 const mobile = process.argv[3];
@@ -10,7 +11,9 @@ let {browser, page} = await connect({
 
     args: ['--start-maximized', '--no-sandbox', '--proxy-server=127.0.0.1:10809'],
 
-    customConfig: {},
+    customConfig: {
+        userDataDir: config.userDataDir
+    },
 
     turnstile: true,
 

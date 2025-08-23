@@ -223,4 +223,4 @@ try {
     await browser.close();
 }
 
-process.exit(1);
+process.exit(0);
