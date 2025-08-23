@@ -4,7 +4,7 @@ import {delay} from './websocket.mjs';
 import config from "./config.json" with { type: 'json' };
 
 
-const concept = "308428";
+const concept = process.argv[2];
 
 let {browser, page} = await connect({
     headless: false,
@@ -24,6 +24,7 @@ let {browser, page} = await connect({
 });
 
 await loginThs(page);
+console.log("spider start");
 
 let i = 1;
 while (i < 888) {
