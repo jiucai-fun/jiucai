@@ -20,7 +20,7 @@ export const loginThs = async (page) => {
     while (true) {
         const loginHideButton = await page.$('>>> [class="login-box hide"]');
         if (loginHideButton != null) {
-            console.warn("同花顺账号已登录！！！！！！！");
+            console.info("同花顺账号已登录！！！！！！！");
             return;
         }
         console.error("请登录同花顺账号");
