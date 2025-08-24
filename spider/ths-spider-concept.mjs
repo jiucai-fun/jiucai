@@ -51,7 +51,7 @@ while (i < 888) {
         }
         outStocks.forEach(it => console.log(`${concept},${it}`));
         i++;
-        await delay(2000);
+        await delay(3000);
     } catch (e) {
         console.error(e);
         await delay(5000);
