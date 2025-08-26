@@ -90,6 +90,19 @@ const spiderStocks = async () => {
 // ---------------------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------------
 const spiderIndexes = async () => {
+    while (true) {
+        const now = new Date();
+        const hour = now.getHours(); // 获取小时 (0 - 23)
+        if (hour >= 17) {
+            console.log("已经超过下午 5 点");
+            break;
+        } else {
+            console.log(`${new Date()}-等待到下午5点钟，重新爬取期权`);
+            await delay(10 * 60 * 1000);
+            continue;
+        }
+    }
+
     // 记录函数开始时间
     let startTime = performance.now();
     const page = await browser.newPage();
