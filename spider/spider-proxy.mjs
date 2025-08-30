@@ -45,6 +45,15 @@ try {
 }
 
 try {
+    const cookieButton = await page.$('.accept-all');
+    if (cookieButton != null) {
+        await cookieButton.click();
+        await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    }
+} catch (error) {
+}
+
+try {
     const html = await page.content(); // serialized HTML of page DOM.
     console.log(html);
 } catch (error) {
