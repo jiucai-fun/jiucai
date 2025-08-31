@@ -49,8 +49,8 @@ public class MarketTest {
         ThreadUtils.sleep(3000);
 
         var context = new ClassPathXmlApplicationContext("application-test.xml");
-        var webSocketClientProtocolConfig = WebSocketClientProtocolConfig.newBuilder().webSocketUri("wss://ws.jiucai.fun/").build();
-        var client = new WebsocketSslClient(HostAndPort.valueOf("ws.jiucai.fun:443"), webSocketClientProtocolConfig);
+        var webSocketClientProtocolConfig = WebSocketClientProtocolConfig.newBuilder().webSocketUri("wss://ws.xxx.com").build();
+        var client = new WebsocketSslClient(HostAndPort.valueOf("ws.xxx.com:443"), webSocketClientProtocolConfig);
 
 //        var webSocketClientProtocolConfig = WebSocketClientProtocolConfig.newBuilder().webSocketUri("ws://127.0.0.1:19001/websocket").build();
 //        var client = new WebsocketClient(HostAndPort.valueOf("127.0.0.1:19001"), webSocketClientProtocolConfig);
