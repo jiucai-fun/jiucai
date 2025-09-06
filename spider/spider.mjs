@@ -13,6 +13,7 @@ let {browser, page} = await connect({
     headless: false,
 
     args: ['--start-maximized', '--no-sandbox'],
+    // args: ['--start-maximized', '--no-sandbox', '--disk-cache-size=0'],
 
     customConfig: {
         userDataDir: config.userDataDir

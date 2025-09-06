@@ -10,6 +10,7 @@ let {browser, page} = await connect({
     headless: false,
 
     args: ['--start-maximized', '--no-sandbox', '--proxy-server=127.0.0.1:10809'],
+    // args: ['--start-maximized', '--no-sandbox', '--proxy-server=127.0.0.1:10809', '--disk-cache-size=0'],
 
     customConfig: {
         userDataDir: config.userDataDir
