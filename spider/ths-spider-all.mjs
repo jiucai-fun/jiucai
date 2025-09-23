@@ -107,7 +107,12 @@ const spiderIndexes = async () => {
     let startTime = performance.now();
     const page = await browser.newPage();
 
-    const stocks = await spiderOptions();
+    // 总的多空持仓
+    const stocks = await spiderGzqh();
+    // 中信证券的多空持仓
+    const zxzq = await spiderZxzq(stocks[0].name.substring(0, 6));
+    zxzq.forEach(it => stocks.push(it));
+
     let i = 1;
     while (i < 100) {
         try {
@@ -160,7 +165,7 @@ const spiderIndexes = async () => {
 }
 
 
-const spiderOptions = async (optionIndex, date) => {
+const spiderGzqh = async () => {
     const page = await browser.newPage();
 
     while (true)
@@ -214,6 +219,42 @@ const spiderOptions = async (optionIndex, date) => {
             console.error(e);
         }
     }
+}
+
+const spiderZxzq = async (name) => {
+    const page = await browser.newPage();
+
+    const urlIF = `https://data.10jqka.com.cn/gzqh/detail/instrumentId/${name}/partyId/0018/`;
+    await page.goto(urlIF, {waitUntil: 'networkidle0'});
+    const resultIF = await page.evaluate(it => {
+        const tbody = document.getElementsByTagName("tbody")[0];
+        const trow = tbody.rows[0];
+        const ddName = "中信证券多单持仓";
+        console.log(ddName)
+        const ddCount = trow.cells[3].innerText;
+        console.log(ddCount);
+
+        const kdName = "中信证券空单持仓";
+        console.log(kdName)
+        const kdCount = trow.cells[5].innerText;
+        console.log(kdCount);
+        return [
+            {
+                code: 778000,
+                name: ddName,
+                index: ddCount
+            },
+            {
+                code: 778001,
+                name: kdName,
+                index: kdCount
+            }
+        ]
+    });
+    for (const result of resultIF) {
+        console.log(`沪深300-${result.name}: ${result.index}`);
+    }
+    return resultIF;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
