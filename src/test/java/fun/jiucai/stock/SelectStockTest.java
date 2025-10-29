@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -18,7 +19,8 @@ public class SelectStockTest {
     public void test() throws Exception {
         var files = FileUtils.getAllReadableFiles(new File("./stocks"))
                 .stream()
-                .sorted(Comparator.comparing(File::getName))
+                .filter(it -> !it.getPath().contains("abnormal"))
+                .sorted((a, b) -> b.compareTo(a))
                 .toList();
 
         var map = new HashMap<String, ArrayListLong>();
@@ -47,9 +49,8 @@ public class SelectStockTest {
             if (size < 10) {
                 continue;
             }
-            var average = (long) ((list.get(size - 2) + list.get(size - 3) + list.get(size - 4)) / 3.0F);
-//            var average = (long) ((list.get(size - 2) + list.get(size - 3) + list.get(size - 4) + list.get(size - 5) + list.get(size - 6) + list.get(size - 7) + list.get(size - 8)) / 7.0F);
-            var last = list.get(size - 1);
+            var average = (long) ((list.get(1) + list.get(2) + list.get(3)) / 3.0F);
+            var last = list.get(0);
             if ((last - average) / (float) average > 2F) {
                 result.add(code);
             }
