@@ -15,7 +15,7 @@ import java.util.HashMap;
 @Ignore
 public class SelectStockTest {
 
-    // 选择放量过后首次回调的个股
+    // 选择放量过后首次缩量的个股
     @Test
     public void test() throws Exception {
         var files = FileUtils.getAllReadableFiles(new File("./stocks"))
