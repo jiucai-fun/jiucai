@@ -15,6 +15,7 @@ import java.util.HashMap;
 @Ignore
 public class SelectStockTest {
 
+    // 选择放量过后首次回调的个股
     @Test
     public void test() throws Exception {
         var files = FileUtils.getAllReadableFiles(new File("./stocks"))
@@ -46,11 +47,15 @@ public class SelectStockTest {
             var code = entry.getKey();
             var list = entry.getValue();
             var size = list.size();
+            // 排除北交所
+            if (code.startsWith("9")) {
+                continue;
+            }
             if (size < 10) {
                 continue;
             }
-            var average = (long) ((list.get(1) + list.get(2) + list.get(3)) / 3.0F);
-            var last = list.get(0);
+            var average = (long) ((list.get(0) + list.get(2) + list.get(3)) / 3.0F);
+            var last = list.get(1);
             if ((last - average) / (float) average > 2F) {
                 result.add(code);
             }
