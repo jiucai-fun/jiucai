@@ -3,6 +3,8 @@ package fun.jiucai.stock;
 import com.zfoo.protocol.collection.ArrayListLong;
 import com.zfoo.protocol.util.FileUtils;
 import com.zfoo.protocol.util.StringUtils;
+import fun.jiucai.stock.protocol.Stock;
+import fun.jiucai.stock.protocol.StockExchange;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -24,8 +26,7 @@ public class SelectStockTest {
                 .sorted((a, b) -> b.compareTo(a))
                 .toList();
 
-        var map = new HashMap<String, ArrayListLong>();
-        var codeNameMap = new HashMap<String, String>();
+        var stockMap = new HashMap<String, Stock>();
         for (var file : files) {
             var stocks = FileUtils.readFileToString(file);
             var splits = stocks.split(FileUtils.LS_REGEX);
@@ -35,18 +36,23 @@ public class SelectStockTest {
                 var cols = row.split(StringUtils.COMMA_REGEX);
                 var code = StringUtils.trim(cols[0]);
                 var name = cols[1];
-                var stockExchange = toPrice(cols[5]);
-                var list = map.computeIfAbsent(code, it -> new ArrayListLong(files.size()));
-                list.add(stockExchange);
-                codeNameMap.put(code, name);
+                var price = cols[2];
+                var exchange = toPrice(cols[5]);
+                var amount = toPrice(cols[6]);
+                if (price.equals("--")) {
+                    continue;
+                }
+                var stock = stockMap.computeIfAbsent(code, it -> new Stock(code, name));
+                stock.getExchanges().add(new StockExchange(Double.parseDouble(price), exchange, amount));
             }
         }
 
         var result = new ArrayList<String>();
-        for (var entry : map.entrySet()) {
+        for (var entry : stockMap.entrySet()) {
             var code = entry.getKey();
-            var list = entry.getValue();
-            var size = list.size();
+            var stock = entry.getValue();
+            var stockExchanges = stock.getExchanges();
+            var size = stockExchanges.size();
             // 排除北交所
             if (code.startsWith("9")) {
                 continue;
@@ -54,15 +60,18 @@ public class SelectStockTest {
             if (size < 10) {
                 continue;
             }
-            var average = (long) ((list.get(0) + list.get(2) + list.get(3)) / 3.0F);
-            var last = list.get(1);
+            var exchanges = stockExchanges.stream().map(it -> it.getExchange()).toList();
+
+            var average = (long) ((exchanges.get(0) + exchanges.get(2) + exchanges.get(3)) / 3.0F);
+            var last = exchanges.get(1);
             if ((last - average) / (float) average > 2F) {
                 result.add(code);
             }
         }
 
         for (var code : result.stream().sorted().toList()) {
-            var name = codeNameMap.get(code);
+            var stock = stockMap.get(code);
+            var name = stock.getName();
             System.out.println(StringUtils.format("{}   {}", code, name));
         }
     }
