@@ -2,6 +2,7 @@ package fun.jiucai.stock;
 
 import com.zfoo.protocol.collection.ArrayListLong;
 import com.zfoo.protocol.util.FileUtils;
+import com.zfoo.protocol.util.NumberUtils;
 import com.zfoo.protocol.util.StringUtils;
 import fun.jiucai.stock.protocol.Stock;
 import fun.jiucai.stock.protocol.StockExchange;
@@ -30,6 +31,8 @@ public class SelectStockTest {
         for (var file : files) {
             var stocks = FileUtils.readFileToString(file);
             var splits = stocks.split(FileUtils.LS_REGEX);
+            var fileName = file.getName();
+            var date = StringUtils.substringBeforeLast(fileName, ".");
 
             for (int i = 1; i < splits.length; i++) {
                 var row = splits[i];
@@ -43,19 +46,25 @@ public class SelectStockTest {
                     continue;
                 }
                 var stock = stockMap.computeIfAbsent(code, it -> new Stock(code, name));
-                stock.getExchanges().add(new StockExchange(Double.parseDouble(price), exchange, amount));
+                stock.getExchanges().add(new StockExchange(Double.parseDouble(price), exchange, amount, date));
             }
         }
 
         var result = new ArrayList<String>();
-        var start = 30;
+        var startDay = 23;
         for (var entry : stockMap.entrySet()) {
             var code = entry.getKey();
             var stock = entry.getValue();
+            var name = stock.getName();
             var stockExchanges = stock.getExchanges();
             var size = stockExchanges.size();
+
             // 排除北交所
-            if (code.startsWith("9")) {
+            if (code.startsWith("9") || code.startsWith("8")) {
+                continue;
+            }
+            // 排除ST
+            if (name.toUpperCase().contains("ST")) {
                 continue;
             }
             if (size < 60) {
@@ -64,19 +73,30 @@ public class SelectStockTest {
 
             var exchanges = stockExchanges.stream().map(it -> it.getExchange()).toList();
 
-            var average = (long) ((exchanges.get(start + 0) + exchanges.get(start + 2) + exchanges.get(start + 3)) / 3.0F);
-            var last = exchanges.get(start + 1);
+            var average = (long) ((exchanges.get(startDay + 0) + exchanges.get(startDay + 2) + exchanges.get(startDay + 3)) / 3.0F);
+            var last = exchanges.get(startDay + 1);
             if ((last - average) / (float) average > 2F) {
                 result.add(code);
             }
         }
 
+        System.out.println(files.get(startDay).getName());
         for (var code : result.stream().sorted().toList()) {
             var stock = stockMap.get(code);
             var name = stock.getName();
             var stockExchanges = stock.getExchanges();
-            var price = stockExchanges.get(0).getPrice();
-            System.out.println(StringUtils.format("{}   {}  {}  {}", code, name));
+            var exchanges = stockExchanges.stream().map(it -> it.getExchange()).toList();
+            var priceBuilder = new StringBuilder();
+            for (int i = startDay + 1; i > startDay - 10; i--) {
+                if (i < 0) {
+                    break;
+                }
+                var stockExchange = stockExchanges.get(i);
+                var price = stockExchange.getPrice();
+                priceBuilder.append(NumberUtils.decimalFormat("#.00", price)).append(StringUtils.SPACE);
+            }
+
+            System.out.println(StringUtils.format("{}   {}  {}", code, name, priceBuilder.toString()));
         }
     }
 

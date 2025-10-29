@@ -12,5 +12,6 @@ public class StockExchange {
     private double price;
     private long exchange;
     private long amount;
+    private String date;
 
 }
