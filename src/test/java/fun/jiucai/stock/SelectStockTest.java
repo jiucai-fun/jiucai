@@ -48,6 +48,7 @@ public class SelectStockTest {
         }
 
         var result = new ArrayList<String>();
+        var start = 30;
         for (var entry : stockMap.entrySet()) {
             var code = entry.getKey();
             var stock = entry.getValue();
@@ -57,13 +58,14 @@ public class SelectStockTest {
             if (code.startsWith("9")) {
                 continue;
             }
-            if (size < 10) {
+            if (size < 60) {
                 continue;
             }
+
             var exchanges = stockExchanges.stream().map(it -> it.getExchange()).toList();
 
-            var average = (long) ((exchanges.get(0) + exchanges.get(2) + exchanges.get(3)) / 3.0F);
-            var last = exchanges.get(1);
+            var average = (long) ((exchanges.get(start + 0) + exchanges.get(start + 2) + exchanges.get(start + 3)) / 3.0F);
+            var last = exchanges.get(start + 1);
             if ((last - average) / (float) average > 2F) {
                 result.add(code);
             }
@@ -72,7 +74,9 @@ public class SelectStockTest {
         for (var code : result.stream().sorted().toList()) {
             var stock = stockMap.get(code);
             var name = stock.getName();
-            System.out.println(StringUtils.format("{}   {}", code, name));
+            var stockExchanges = stock.getExchanges();
+            var price = stockExchanges.get(0).getPrice();
+            System.out.println(StringUtils.format("{}   {}  {}  {}", code, name));
         }
     }
 
