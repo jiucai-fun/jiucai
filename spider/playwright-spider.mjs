@@ -56,8 +56,12 @@ try {
 await page.mouse.wheel(0, 600);
 
 
-const html = await page.content(); // serialized HTML of page DOM.
-console.log(html);
+try {
+    let html = await page.content(); // serialized HTML of page DOM.
+    console.log(html);
+} catch (error) {
+    console.log('zfoo_error', error);
+}
 
 // Teardown
 await page.close();
