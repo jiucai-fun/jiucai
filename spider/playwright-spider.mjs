@@ -26,11 +26,21 @@ const context = await browser.newContext({
 
 
 const page = await context.newPage();
-await page.goto(url);
+
+try {
+    await page.goto(url, {
+        timeout: 30_000,
+        waitUntil: 'domcontentloaded'
+    });
+} catch (error) {
+}
 
 
 // 反爬策略
-await page.waitForLoadState('networkidle');
+try {
+    await page.waitForLoadState('networkidle');
+} catch (error) {
+}
 await page.waitForTimeout(300 + Math.random() * 700);
 
 // 接受cookie
