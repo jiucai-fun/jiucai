@@ -21,7 +21,6 @@ const context = await browser.newContext({
     viewport: null,
     locale: 'zh-CN',
     timezoneId: 'Asia/Shanghai',
-    userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36'
 });
 
 
