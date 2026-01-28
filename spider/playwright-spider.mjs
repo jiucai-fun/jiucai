@@ -34,13 +34,14 @@ try {
 } catch (error) {
 }
 
-
 // 反爬策略
+await page.mouse.wheel(0, Math.random() * 300);
 try {
     await page.waitForLoadState('networkidle');
 } catch (error) {
 }
 await page.waitForTimeout(300 + Math.random() * 700);
+await page.mouse.wheel(0, Math.random() * 300);
 
 // 接受cookie
 try {
@@ -51,8 +52,6 @@ try {
     }
 } catch (error) {
 }
-
-await page.mouse.wheel(0, 600);
 
 
 try {
