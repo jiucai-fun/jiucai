@@ -43,7 +43,7 @@ public class MarketTest {
 
     @Test
     public void saveMarket() throws Exception {
-        var result = OSUtils.execCommand("node ths-spider-all.mjs", "./spider");
+        var result = OSUtils.execCommand("node ths-spider-all.mjs", "./spider", TimeUtils.MILLIS_PER_DAY);
         System.out.println(result);
         System.out.println("------------------------------------------------------------------------------------------");
         ThreadUtils.sleep(3000);
